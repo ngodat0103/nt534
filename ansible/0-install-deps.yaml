@@ -1,0 +1,7 @@
+- name: Install dependencies
+  hosts: squid-proxy-server
+  become: yes
+  roles:
+   - role: squid-proxy-server
+     tags: install-deps
+   
