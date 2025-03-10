@@ -1,0 +1,6 @@
+upstream_name: nextcloud
+server_ip: 127.0.0.1
+server_port: 3004
+server_name: nextcloud.ngodat0103.live
+ssl_certificate: /etc/letsencrypt/live/nextcloud.ngodat0103.live/fullchain.pem 
+ssl_certificate_key: /etc/letsencrypt/live/nextcloud.ngodat0103.live/privkey.pem
