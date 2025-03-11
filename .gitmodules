@@ -1,3 +1,9 @@
-[submodule "modules"]
-	path = moduless
-	url = git+ssh@github.com:ngodat0103/common-stuff.git
+[submodule "tf/modules"]
+	path = tf/modules
+	url = https://github.com/ngodat0103/common-stuff.git
+[submodule "ansible/roles/squid-proxy-server"]
+	path = ansible/roles/squid-proxy-server
+	url = https://github.com/robertdebock/ansible-role-squid.git
+[submodule "tf/common-stuff"]
+	path = tf/common-stuff
+	url = https://github.com/ngodat0103/common-stuff.git
