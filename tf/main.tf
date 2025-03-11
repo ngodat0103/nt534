@@ -4,12 +4,12 @@ locals {
 
 
 module "init_storage_and_images" {
-  source = "./modules/tf/kvm/images"
+  source = "./common-stuff/kvm/images"
 }
 
 
 module "network" {
-  source          = "./modules/tf/kvm/network"
+  source          = "./common-stuff/kvm/network"
   network_name    = local.network_name
   network_mode    = "nat"
   network_domain  = "nt534.local"
@@ -18,7 +18,7 @@ module "network" {
 
 
 module "squid_proxy_server" {
-  source             = "./modules/tf/kvm/vm"
+  source             = "./common-stuff/kvm/vm"
   vm_name            = "squid-proxy"
   vm_memory          = 1024
   vm_vcpu            = 2
@@ -30,7 +30,7 @@ module "squid_proxy_server" {
   base_volume_id     = module.init_storage_and_images.ubuntu_2204_disk_id
 }
 module "icap_server" {
-  source             = "./modules/tf/kvm/vm"
+  source             = "./common-stuff/kvm/vm"
   vm_name            = "icap-server"
   vm_memory          = 1024
   vm_vcpu            = 2
