@@ -4,4 +4,11 @@
   roles:
    - role: squid-proxy-server
      tags: install-deps
+  tasks:
+   - name: Install squidguard
+     ansible.builtin.apt:
+      name: squidguard
+      state: present
+      update_cache: yes
+
    

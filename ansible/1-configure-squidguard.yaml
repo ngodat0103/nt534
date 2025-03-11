@@ -1,0 +1,32 @@
+- name: Configure squidguard
+  hosts: squid-proxy-server
+  become: yes
+  tasks:
+   - name: Download blacklist database
+     ansible.builtin.get_url:
+      url: https://dsi.ut-capitole.fr/blacklists/download/blacklists.tar.gz
+      dest: /var/lib/squidguard/db
+      mode: 0644
+   - name: Extract the blacklist database
+     ansible.builtin.unarchive:
+      src: /var/lib/squidguard/db/blacklists.tar.gz
+      dest: /var/lib/squidguard/db
+      remote_src: yes
+   - name: Copy squidGuard configuration file
+     ansible.builtin.copy:
+      src: squidGuard.conf
+      dest: /etc/squidguard/squidGuard.conf
+      mode: 0644
+   - name: Build the blacklist database
+     ansible.builtin.command:
+      cmd: squidGuard -C all
+   - name: Configure squid to use squidguard
+     ansible.builtin.copy:
+      src: squid.conf
+      dest: /etc/squid/squid.conf
+      mode: 0644
+   - name: Restart squid service
+     ansible.builtin.systemd:
+      name: squid
+      state: restarted
+      enabled: yes
