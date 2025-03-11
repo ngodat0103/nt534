@@ -9,3 +9,13 @@ shutdown-all-vms() {
 boot-all-vm (){
         terraform apply -auto-approve
 }
+tf-recreate-vm(){
+        terraform destroy -auto-approve --target=module.squid_proxy_server --target=module.icap_server --target=module.network
+        terraform apply -auto-approve
+}
+list-real-ip (){
+        echo "real ip of squid-proxy"
+        virsh domifaddr squid-proxy
+        echo "real ip of icap-serve"
+        virsh domifaddr icap-server
+}
