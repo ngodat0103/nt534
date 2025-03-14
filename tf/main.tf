@@ -32,7 +32,7 @@ module "squid_proxy_server" {
 module "icap_server" {
   source             = "./common-stuff/kvm/vm"
   vm_name            = "icap-server"
-  vm_memory          = 1024
+  vm_memory          = 4096
   vm_vcpu            = 2
   ssh_key            = file("~/.ssh/id_rsa.pub")
   vm_network_name    = local.network_name
