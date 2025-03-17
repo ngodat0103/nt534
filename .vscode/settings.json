@@ -1,5 +1,6 @@
 {
         "yaml.schemas": {
                 "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": "file:///home/akira/code/nt534/ansible/1-configure-squidguard.yaml"
-        }
+        },
+        "ansible.python.interpreterPath": "/bin/python3"
 }
