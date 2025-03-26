@@ -1,0 +1,28 @@
+- name: Manage Iptables, make sure http/https go through proxy
+  hosts: squid-proxy-server
+  become: yes
+  tasks: 
+  - name: Make sure http go through proxy
+    ansible.builtin.iptables:
+      action: append
+      chain: PREROUTING
+      protocol: tcp
+      state: present
+      table: nat
+      source: 10.8.0.0/24
+      destination_port: 80
+      jump: DNAT
+      to_destination: 192.168.30.2:3128
+  - name: Make sure https go through proxy
+    ansible.builtin.iptables:
+      action: append
+      state: present
+      chain: PREROUTING
+      protocol: tcp
+      table: nat
+      source: 10.8.0.0/24
+      destination_port: 443
+      jump: DNAT
+      to_destination: 192.168.30.2:3128
+    
+      
