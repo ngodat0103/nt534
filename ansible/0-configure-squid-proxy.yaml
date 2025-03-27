@@ -4,4 +4,20 @@
   roles:
    - role: squid-proxy-server
      tags: squid-proxy-server
+  tasks:
+   - name: Allow Connect rule
+     ansible.builtin.lineinfile:
+      path: /etc/squid/squid.conf
+      line: acl CONNECT method CONNECT
+      state: present
+   - name: Allow CONNECT method
+     ansible.builtin.lineinfile:
+      path: /etc/squid/squid.conf
+      line: http_access allow CONNECT
+      state: present
+   - name: Restart squid service
+     ansible.builtin.systemd:
+      name: squid
+      state: restarted
+      enabled: yes
         

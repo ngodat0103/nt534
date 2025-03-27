@@ -7,7 +7,7 @@
       action: append
       chain: PREROUTING
       protocol: tcp
-      state: present
+      state: absent
       table: nat
       source: 10.8.0.0/24
       destination_port: 80
@@ -16,7 +16,7 @@
   - name: Make sure https go through proxy
     ansible.builtin.iptables:
       action: append
-      state: present
+      state: absent
       chain: PREROUTING
       protocol: tcp
       table: nat
