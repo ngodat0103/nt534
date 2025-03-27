@@ -17,3 +17,11 @@ resource "digitalocean_droplet" "squid-proxy-server" {
   vpc_uuid = module.network.id
   ssh_keys = [digitalocean_ssh_key.akira-ssh-key.fingerprint]
 }
+
+resource "digitalocean_project" "nt534-lab" { 
+  name        = "nt534-lab"
+  description = "Playground for nt534 coursework"
+  purpose     = "Education purpose about security"
+  environment = "Development"
+  resources = [digitalocean_droplet.squid-proxy-server.urn]
+}
