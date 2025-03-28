@@ -15,6 +15,23 @@
       path: /etc/squid/squid.conf
       line: http_access allow CONNECT
       state: present
+   - name: Ensure Squid configuration includes C-icap setting
+     ansible.builtin.blockinfile:
+      path: /etc/squid/squid.conf
+      block: |
+        icap_enable on
+        icap_preview_enable on
+        icap_preview_size 1024
+        icap_send_client_ip on
+        icap_send_client_username on
+        icap_client_username_header X-Client-Username
+        icap_service service_req reqmod_precache icap://127.0.0.1:1344/srv_clamav
+        adaptation_access service_req allow all
+        icap_service service_resp respmod_precache icap://127.0.0.1:1344/srv_clamav
+        adaptation_access service_resp allow all
+      marker: "# {mark} ANSIBLE MANAGED BLOCK"
+      state: present
+
    - name: Restart squid service
      ansible.builtin.systemd:
       name: squid

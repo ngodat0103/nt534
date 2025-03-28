@@ -79,11 +79,6 @@
       name: clamav-daemon
       enabled: yes
       state: started
-  # - name: Enable and start icap-service
-  #   ansible.builtin.service:
-  #     name: c-icap
-  #     enabled: yes
-  #     state: started
   - name: Configure C-ICAP to use ClamAV
     ansible.builtin.lineinfile:
       path: /usr/local/etc/c-icap.conf

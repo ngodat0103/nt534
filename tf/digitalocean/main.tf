@@ -1,6 +1,6 @@
-module "network"{
-        source = "./network"
-        ip_range = "192.168.30.0/24"
+module "network" {
+  source   = "./network"
+  ip_range = "192.168.30.0/24"
 }
 resource "digitalocean_ssh_key" "akira-ssh-key" {
   name       = "akira-ssh-key"
@@ -9,19 +9,19 @@ resource "digitalocean_ssh_key" "akira-ssh-key" {
 
 
 resource "digitalocean_droplet" "squid-proxy-server" {
-  image   = "ubuntu-22-04-x64"
-  name    = "squid-proxy-server"
-  region  = "sgp1"
-  size    = "s-2vcpu-4gb"
-  backups = false
+  image    = "ubuntu-22-04-x64"
+  name     = "squid-proxy-server"
+  region   = "sgp1"
+  size     = "s-2vcpu-4gb"
+  backups  = false
   vpc_uuid = module.network.id
   ssh_keys = [digitalocean_ssh_key.akira-ssh-key.fingerprint]
 }
 
-resource "digitalocean_project" "nt534-lab" { 
+resource "digitalocean_project" "nt534-lab" {
   name        = "nt534-lab"
   description = "Playground for nt534 coursework"
   purpose     = "Education purpose about security"
   environment = "Development"
-  resources = [digitalocean_droplet.squid-proxy-server.urn]
+  resources   = [digitalocean_droplet.squid-proxy-server.urn]
 }

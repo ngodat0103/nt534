@@ -1,10 +1,10 @@
-terraform { 
-  cloud { 
-    
-    organization = "akira-homelab" 
+terraform {
+  cloud {
 
-    workspaces { 
-      name = "digital-ocean-cli" 
-    } 
-  } 
+    organization = "akira-homelab"
+
+    workspaces {
+      name = "digital-ocean-cli"
+    }
+  }
 }

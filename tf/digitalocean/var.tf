@@ -1,7 +1,7 @@
-variable "token"{
-        description = "DigitalOcean API token"
-        type = string
-        sensitive = true
+variable "token" {
+  description = "DigitalOcean API token"
+  type        = string
+  sensitive   = true
 }
 
 
