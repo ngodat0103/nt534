@@ -1,0 +1,106 @@
+
+- name: Install c-icap for icap-server
+  hosts: squid-proxy-server
+  tags: deps-for-icap
+  vars: 
+   download_path: /root/downloads
+  become: yes
+  tasks:
+   - name: Install c++ build tool
+     ansible.builtin.apt:
+      state: present
+      update_cache: yes
+      name: 
+       - automake
+       - autoconf
+       - libtool
+       - net-tools
+       - make
+       - g++
+       - libtool-bin
+       - libicapapi5
+       - libicapapi-dev
+   - name: Install clamav
+     ansible.builtin.apt:
+      name: 
+       - clamav 
+       - clamav-daemon
+      state: present
+      update_cache: yes
+   - name: Create download directory
+     ansible.builtin.file:
+      dest: "{{download_path}}"
+      state: directory
+   - name: Check c-icap installed or not
+     ansible.builtin.stat:
+      dest: /usr/local/bin/c-icap
+     register: c_icap
+   - name: Extract c-icap
+     ansible.builtin.unarchive:
+      src: "https://github.com/c-icap/c-icap-server/archive/refs/tags/C_ICAP_0.6.3.tar.gz"
+      dest: "{{download_path}}"
+      remote_src: yes
+     when: c_icap.stat.exists == False
+   - name: Build from source
+     ansible.builtin.command:
+      cmd: |
+       cd {{download_path}}/c-icap-server-C_ICAP_0.6.
+       autoreconf -i
+       ./configure
+       make
+       make install
+       echo "/usr/local/lib" | sudo tee -a /etc/ld.so.conf.d/c-icap.conf
+     when: c_icap.stat.exists == False
+
+   - name: Check if clamd_mod.so exists
+     stat:
+      path: /usr/local/lib/c_icap/clamd_mod.so
+     register: clamd_mod
+   - name: Build c-icap modules from source
+     ansible.builtin.command:
+      cmd: |
+        cd /root/downloads
+        wget https://github.com/c-icap/c-icap-modules/archive/refs/tags/C_ICAP_MODULES_0.5.7.tar.gz
+        tar -xvf C_ICAP_MODULES_0.5.7.tar.gz
+        cd c-icap-modules-C_ICAP_MODULES_0.5.7
+        autoreconf -i
+        ./configure
+        make
+        make install
+        libtool --finish /usr/local/lib/c_icap/
+     when: clamd_mod.stat.exists == False
+- name: Configure icap-server
+  hosts: squid-proxy-server
+  tags: configure-icap
+  become: yes
+  tasks:
+  - name: Enable claimAv daemon
+    ansible.builtin.service:
+      name: clamav-daemon
+      enabled: yes
+      state: started
+  # - name: Enable and start icap-service
+  #   ansible.builtin.service:
+  #     name: c-icap
+  #     enabled: yes
+  #     state: started
+  - name: Configure C-ICAP to use ClamAV
+    ansible.builtin.lineinfile:
+      path: /usr/local/etc/c-icap.conf
+      line: 'Include virus_scan.conf'
+      state: present
+  - name: Enable clamd_mod
+    ansible.builtin.lineinfile:
+      path: /usr/local/etc/c-icap.conf
+      line: 'Include clamd_mod.conf'
+      state: present
+  - name: Copy c-icap service
+    ansible.builtin.copy:
+     src: c-icap/c-icap.service
+     dest: /etc/systemd/system/c-icap.service
+  - name: Enable c-icap service
+    ansible.builtin.systemd:
+      name: c-icap
+      enabled: yes
+      state: started
+      daemon_reload: yes

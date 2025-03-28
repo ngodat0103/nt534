@@ -1,0 +1,8 @@
+[Unit]
+Description= C-icap service
+After = network.target
+[Service]
+ExecStartPre=mkdir -p /var/run/c-icap
+ExecStart=c-icap -D -d 5 -N
+[Install]
+WantedBy=default.target
