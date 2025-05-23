@@ -1,0 +1,14 @@
+services:
+ squid-proxy-server:
+  volumes:
+    - squid-etc:/usr/local/squid/etc
+    - squid-log:/usr/local/squid/logs
+  network_mode: host
+  image: ghcr.io/ngodat0103/nt534/squid-proxy-server:latest
+  container_name: squid-proxy-server
+  restart: always
+  build:
+   context: .
+volumes:
+ squid-etc:
+ squid-log:

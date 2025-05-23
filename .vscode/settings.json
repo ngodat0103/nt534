@@ -1,6 +1,9 @@
 {
         "yaml.schemas": {
-                "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": "file:///home/akira/code/nt534/ansible/1-configure-squidguard.yaml"
+                "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible.json#/$defs/playbook": [
+                        "file:///home/akira/code/nt534/ansible/1-configure-squidguard.yaml",
+                        "file:///home/akira/code/nt534/ansible/4-configure-iptables.yaml"
+                ]
         },
         "ansible.python.interpreterPath": "/bin/python3"
 }

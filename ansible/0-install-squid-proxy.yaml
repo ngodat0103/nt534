@@ -1,0 +1,24 @@
+- name: Build from source and install Squid proxy server
+  hosts: squid-proxy-server
+  become: yes
+  tasks:
+   - name: Download system dependencies
+     ansible.builtin.apt:
+      name:
+       - libssl-dev
+      update_cache: yes
+      state: present
+   - name: Download source
+     ansible.builtin.git:
+      version: SQUID_6_13
+      repo: https://github.com/squid-cache/squid.git
+      dest: /root/squid
+   - name: Build from source
+     ansible.builtin.command:
+     cmd: |
+      cd /root/squid
+      autoreconf -i
+      ./configure --enable-ssl --enable-ssl-crtd --enable-icap-client
+      make
+      make install
+      

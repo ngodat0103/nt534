@@ -1,7 +1,8 @@
 
 - name: Install c-icap for icap-server
-  hosts: squid-proxy-server
   tags: deps-for-icap
+  connection: local
+  hosts: localhost
   vars: 
    download_path: /root/downloads
   become: yes
@@ -42,9 +43,8 @@
       remote_src: yes
      when: c_icap.stat.exists == False
    - name: Build from source
-     ansible.builtin.command:
-      cmd: |
-       cd {{download_path}}/c-icap-server-C_ICAP_0.6.
+     ansible.builtin.shell: |
+       cd {{download_path}}/c-icap-server-C_ICAP_0.6
        autoreconf -i
        ./configure
        make
@@ -57,8 +57,7 @@
       path: /usr/local/lib/c_icap/clamd_mod.so
      register: clamd_mod
    - name: Build c-icap modules from source
-     ansible.builtin.command:
-      cmd: |
+     ansible.builtin.shell: |
         cd /root/downloads
         wget https://github.com/c-icap/c-icap-modules/archive/refs/tags/C_ICAP_MODULES_0.5.7.tar.gz
         tar -xvf C_ICAP_MODULES_0.5.7.tar.gz
@@ -67,10 +66,11 @@
         ./configure
         make
         make install
-        libtool --finish /usr/local/lib/c_icap/
+        libtool --finish /usr/lib/x86_64-linux-gnu/c_icap/
      when: clamd_mod.stat.exists == False
 - name: Configure icap-server
-  hosts: squid-proxy-server
+  hosts: localhost
+  connection: local
   tags: configure-icap
   become: yes
   tasks:
@@ -89,6 +89,8 @@
       path: /usr/local/etc/c-icap.conf
       line: 'Include clamd_mod.conf'
       state: present
+  - name: Restart ldconfig
+    ansible.builtin.command: ldconfig
   - name: Copy c-icap service
     ansible.builtin.copy:
      src: c-icap/c-icap.service
